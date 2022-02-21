@@ -519,4 +519,22 @@ final filteredItemListProvider = Provider<List<Item>>((ref) {
 });
 ~~~
 
+# main.dart
+
+>Filter obtained and all from UI.
+
+~~~dart
+final toggleValue = ref.watch(toggleObtained);
+IconButton(
+            icon: Icon(
+              toggleValue ? Icons.check_circle : Icons.check_circle_outline,
+            ),
+            onPressed: () {
+              ref.read(toggleObtained.state).state = !toggleValue;
+              ref.read(itemListFilterProvider.state).state =
+                  toggleValue ? ItemListFilter.all : ItemListFilter.obtained;
+            },
+          )
+~~~
+
 ## 😍😍😍😍😍This project is complete😍😍😍😍😍
