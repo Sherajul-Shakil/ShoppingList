@@ -236,11 +236,10 @@ models into type map stream dynamic without the item id
 
 
 # item_repository.dart
->  this repository handles all of our crud or create read update delete operations that have to do with items in firestore. we'll have a list collection with documents that have the same ids as our users each user document will have another collection called user list where each document represents an item.
+>  this repository handles all of our crud or create read update delete operations that have to do with items in firestore. we'll have a list collection with documents that have the same ids as our users. each user document will have another collection called user list where each document represents an item.
 
-> base item repository will have four
-correct operations that all require a
-user id
+> base item repository will have four correct operations that all require a user id
+
 - retrieve items returns a future list of items
 - create item returns the id of the created item once it's stored in firestore
 - update item updates the item in firestore
@@ -255,12 +254,8 @@ abstract class BaseItemRepository {
 }
 ~~~
 
--  for retrieve items we get the snapshot
-at collectionlists.doc
-userid dot collection user list and
-return a map over the documents
-converting each one to an item using
-item.fromDocument 
+-  for retrieve items we get the snapshot at collectionlists.doc userid dot collection user list and return a map over the documents converting each one to an item using item.fromDocument 
+
 ~~~dart
 Future<List<Item>> retrieveItems({required String userId}) async {
     try {
@@ -328,9 +323,7 @@ extension FirebaseFirestoreX on FirebaseFirestore {
 
 # item_list_controller.dart
 
-> when we think about this screen we know
-it's going to have three different
-states: loading, data, and error 
+> when we think about this screen we know it's going to have three different states: loading, data, and error. 
 
 - loading shows a circular progress indicator
 - data shows the list of items and 
@@ -412,10 +405,7 @@ class ItemListController extends StateNotifier<AsyncValue<List<Item>>> {
 }
 ~~~
 
-> this provider can be declared above our controller provider the purpose of having a separate provider is so we can listen to this
-provider in our ui and display error messages using snack
-bars if we just set the state to async value.error
-then users would see a full screen error message we want users to still be able to view their existing items while notified in a lightweight way that an error occurred.
+> this provider can be declared above our controller provider. the purpose of having a separate provider is so we can listen to this provider in our ui and display error messages using snack bars. if we just set the state to async value error, then users would see a full screen error message. we want users to still be able to view their existing items while notified in a lightweight way that an error occurred.
 
 ~~~dart
 final itemListExceptionProvider = StateProvider<CustomException?>((_) => null);
@@ -500,7 +490,7 @@ class AddItemDialog extends HookConsumerWidget {
 # item_list_controller.dart
 
 > what if we wanted to be able to filter our items and only view the obtained ones? thanks to riverpod this is pretty easy
-to do inside of our item list controller. let's define an enum named itemlist filter with two values all and obtained. next we'll make an itemlest filter provider that uses a state provider to let us know the selected itemless filter. we can now create another provider that gives us a list of items based on our current filter and the existing items in our list. we get the current filter and itemless state by using ref.watch. so whenever there are changes to the filter or list
+to do inside of our item list controller. let's define an enum named itemlist filter with two values all and obtained. next we'll make an itemlist filter provider that uses a state provider to let us know the selected itemless filter. we can now create another provider that gives us a list of items based on our current filter and the existing items in our list. we get the current filter and itemlist state by using ref.watch. so whenever there are changes to the filter or list
 of items this provider will return new items itemlist state has dot maybe one so we can return the correct items based on our filter.
 
 ~~~dart

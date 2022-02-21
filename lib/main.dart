@@ -4,6 +4,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shopping_list/controllers/auth_controller.dart';
 import 'package:shopping_list/controllers/item_list_controller.dart';
+import 'package:shopping_list/general_providers.dart';
 import 'package:shopping_list/models/item_model.dart';
 import 'package:shopping_list/repositories/custom_exception.dart';
 
@@ -31,13 +32,21 @@ class MyApp extends StatelessWidget {
 
 class HomeScreen extends HookConsumerWidget {
   const HomeScreen({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final authControllerState = ref.watch(authControllerProvider);
-    var itemListFilter = ref.watch(itemListFilterProvider);
-    final isObtainedFilter = itemListFilter == ItemListFilter.obtained;
+    ref.listen<CustomException?>(itemListExceptionProvider, (p, c) {
+      if (c!.message!.contains('Something')) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.red,
+            content: Text(c.message!),
+          ),
+        );
+      }
+    });
 
+    final authControllerState = ref.watch(authControllerProvider);
+    final toggleValue = ref.watch(toggleObtained);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Shopping List'),
@@ -51,32 +60,17 @@ class HomeScreen extends HookConsumerWidget {
         actions: [
           IconButton(
             icon: Icon(
-              isObtainedFilter
-                  ? Icons.check_circle
-                  : Icons.check_circle_outline,
+              toggleValue ? Icons.check_circle : Icons.check_circle_outline,
             ),
-            onPressed: () => itemListFilter =
-                isObtainedFilter ? ItemListFilter.all : ItemListFilter.obtained,
+            onPressed: () {
+              ref.read(toggleObtained.state).state = !toggleValue;
+              ref.read(itemListFilterProvider.state).state =
+                  toggleValue ? ItemListFilter.all : ItemListFilter.obtained;
+            },
           ),
         ],
       ),
-
       body: const ItemList(),
-      // body: ProviderListener(
-      //   provider: itemListExceptionProvider,
-      //   onChange: (
-      //     BuildContext context,
-      //     StateController<CustomException?> customException,
-      //   ) {
-      //     ScaffoldMessenger.of(context).showSnackBar(
-      //       SnackBar(
-      //         backgroundColor: Colors.red,
-      //         content: Text(customException.state!.message!),
-      //       ),
-      //     );
-      //   },
-      //   child: const ItemList(),
-      // ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => AddItemDialog.show(context, Item.empty()),
         child: const Icon(Icons.add),

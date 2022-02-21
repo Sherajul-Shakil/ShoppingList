@@ -7,3 +7,5 @@ final firebaseAuthProvider =
 
 final firebaseFirestoreProvider =
     Provider<FirebaseFirestore>((ref) => FirebaseFirestore.instance);
+
+final toggleObtained = StateProvider<bool>((ref) => false);
