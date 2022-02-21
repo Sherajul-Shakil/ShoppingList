@@ -6,12 +6,13 @@ Flutter Shopping List App with Riverpod, Firebase, Hooks, and Freezed Architectu
 
 ~~~dart
 dependencies:
-  cupertino_icons: ^1.0.2
   firebase_core: ^1.12.0
   firebase_auth: ^3.3.7
   cloud_firestore: ^3.1.8
+
   flutter_hooks: ^0.18.2+1
   hooks_riverpod: ^1.0.3
+
   freezed_annotation: ^1.1.0
 ~~~
 ~~~dart
@@ -38,10 +39,7 @@ void main() async {
 
 # auth_repository.dart 
 
-> Let's define an abstract class called
-base auth repository
-that contains all the method signatures
-our auth repository will implement.
+> Let's define an abstract class called base auth repository that contains all the method signatures our auth repository will implement.
 ~~~dart
 abstract class BaseAuthRepository {
   Stream<User?> get authStateChanges; //return user account information
@@ -53,44 +51,21 @@ abstract class BaseAuthRepository {
 
 >we have four different method signatures:
 
-- authstate changes
-which return stream user user is a class
-from firebase auth
-that has general user account
-information. the reason we have a
-question mark after user
-is because the value we get from
-firebase is null if the user is not
-logged in.
+- authstate changes which return stream user. user is a class from firebase auth that has general user account information. the reason we have a question mark after user is because the value we get from firebase is null if the user is not logged in.
 
--  sign in anonymously creates an anonymous
-account for our user and logs them in.
+-  sign in anonymously creates an anonymous account for our user and logs them in.
 
--  getcurrentuser gets and returns the
-current signed in user
-which like before is null if the user is
-not logged in.
+-  getcurrentuser gets and returns the current signed in user which like before is null if the user is not logged in.
 
 - sign out logs the current user out.
 
->  class auth repository implements base
-auth repository
-and takes in a reader from riverpod
-reader
-allows the auth repository to read other
-providers in the app 
+>  class auth repository implements base auth repository and takes in a reader from riverpod reader allows the auth repository to read other providers in the app 
 
 # general_providers.dart
 
-> in this case we need to read our
-firebase auth.instance which we'll get
-from a provider called firebase auth
-provider we'll define firebase auth provider in a
-separate file called generalproviders.dart this
-provides an instance of firebase auth
-we're also going to add our firebase
-firestore provider for when we write our
-item repository to create read update and delete items from firestore 
+> in this case we need to read our firebase auth.instance which we'll get from a provider called firebase auth provider. we'll define firebase auth provider in a separate file called generalproviders.dart. this
+provides an instance of firebase auth. we're also going to add our firebase irestore provider for when we write our
+item repository to create read update and delete items from firestore. 
 
 ~~~dart
 final firebaseAuthProvider =
@@ -143,8 +118,7 @@ class AuthRepository implements BaseAuthRepository {
 }
 ~~~
 
-> for error handling let's wrap each body
-in a try catch block and throw a custom exception passing in
+> for error handling let's wrap each body in a try catch block and throw a custom exception passing in
 the error message from each firebase auth exception 
 ~~~dart
 on FirebaseAuthException catch (e) {
@@ -154,10 +128,8 @@ on FirebaseAuthException catch (e) {
 
 # custom_exception.dart
 
-> we'll make a class called
-customexception that implements exception and contains a
-string message back in authorpository.dart don't forget
-to provide the auth repository and pass in ref.read so we can access it across our app to keep track of our users current authentication state in the app 
+> we'll make a class called customexception that implements exception and contains a string message back in authorpository.dart. don't forget to provide the auth repository and pass in ref.read so we can access it across our app to keep track of our users current authentication state in the app.
+
 ~~~dart
 class CustomException implements Exception {
   final String? message;
@@ -173,16 +145,11 @@ class CustomException implements Exception {
 
 # auth_controller.dart
 
-> to keep track of our users current uthentication state in the app we're going to create an auth controller
-inside of a controller's folder authcontroller extends a state notifier of type nullableuser this means that the state of our auth controller can either be null when the
-user is not logged in or a firebase user one user is logged in
+> to keep track of our users current authentication state in the app we're going to create an auth controller
+inside of a controller's folder. authcontroller extends a state notifier of type nullable user this means that the state of our auth controller can either be null when the user is not logged in or a firebase user one user is logged in.
 auth controller takes in a reader and has a knowable stream subscription of type nullable user called auth state
-changes subscription in the constructor we set the initial
-state of our auth controller to null because no user is signed in then we subscribe to the auth state changes
-stream from our auth repository and update our
-auth controller state whenever user logs
-in or logs out we also need a disposed
-method to cancel our off state changes subscription 
+changes subscription in the constructor we set the initial state of our auth controller to null because no user is signed in. then we subscribe to the auth state changes stream from our auth repository and update our auth controller state. whenever user logs in or logs out we also need a disposed method to cancel our off state changes subscription.
+
 ~~~dart
 final authControllerProvider = StateNotifierProvider<AuthController, User?>(
   (ref) => AuthController(ref.read)
@@ -235,7 +202,7 @@ leading: authControllerState != null
 
 # item_model.dart
 
-- the free setdart file will contain methods like tostring copy with and overrides the double equals operator and hashcode for equality the.
+- the freezed.dart file will contain methods like tostring copy with and overrides the double equals operator and hashcode for equality the.
 
 - g.dart file contains our from json and to json methods.
 ~~~dart
@@ -262,12 +229,10 @@ abstract class Item implements _$Item {
 ~~~
 
 - item.empty returns an item with a name and obtained set to false 
--  item.from document is used for converting document snapshots from
-firebase into item models because our firebase
-document contains a name field and obtained field we can use the
-generated from json method to convert our document data into an item.we copy the id into the model using copy with as doc.id is our item id we should add a method to convert item
+-  item.from document is used for converting document snapshots from firebase into item models because our firebase
+document contains a name field and obtained field. we can use the generated from json method to convert our document data into an item.we copy the id into the model using copy with as doc.id is our item id we should add a method to convert item
 models into type map stream dynamic without the item id 
--  we should add a method to convert item models into type map stream dynamic without the item id so we can add them to firebase in order to add custom methods to a freeze class 
+-  we should add a method to convert item models into type map stream dynamic without the item id so we can add them to firebase in order to add custom methods to a freeze class. 
 
 
 # item_repository.dart
