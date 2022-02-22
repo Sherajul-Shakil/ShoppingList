@@ -4,8 +4,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shopping_list/repositories/auth_repository.dart';
 
 final authControllerProvider = StateNotifierProvider<AuthController, User?>(
-  (ref) => AuthController(ref.read)
-    ..appStarted(), //as soon as user start app, he will be signed in
+  (ref) => AuthController(ref.read)..appStarted(),
+  //as soon as user start app, he will be signed in.
 );
 
 class AuthController extends StateNotifier<User?> {

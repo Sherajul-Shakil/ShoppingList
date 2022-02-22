@@ -34,6 +34,7 @@ class HomeScreen extends HookConsumerWidget {
   const HomeScreen({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    //display error in snackbar
     ref.listen<CustomException?>(itemListExceptionProvider, (p, c) {
       if (c!.message!.contains('Something')) {
         ScaffoldMessenger.of(context).showSnackBar(

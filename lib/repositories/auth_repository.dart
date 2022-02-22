@@ -4,7 +4,8 @@ import 'package:shopping_list/general_providers.dart';
 import 'package:shopping_list/repositories/custom_exception.dart';
 
 abstract class BaseAuthRepository {
-  Stream<User?> get authStateChanges; //return user account information
+  Stream<User?> get authStateChanges;
+  //return user account information
   Future<void> signInAnonymously();
   User? getCurrentUser();
   Future<void> signOut();
